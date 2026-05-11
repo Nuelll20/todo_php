@@ -1,12 +1,12 @@
 <?php
 include 'config.php';
 
-$kegiatan = $_POST['kegiatan'];
+$id = $_GET['id'];
 
 mysqli_query(
     $conn,
-    "INSERT INTO todo(kegiatan)
-VALUES('$kegiatan')"
+    "DELETE FROM todo
+WHERE id='$id'"
 );
 
 header("Location: index.php");

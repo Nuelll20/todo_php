@@ -2,43 +2,85 @@
 include 'config.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('location: login.php');
+    header("Location: login.php");
 }
-
-$user_id = $_SESSION['user_id'];
 ?>
 
 <!DOCTYPE html>
 <html>
 
 <head>
-    <title>To-DO List</title>
+    <title>Todo List</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <h2>Nama: Michael Angelo Praha Jeshua Immanuel || NIM: 245314003</h2>
-    <a href="logout.php">Logout</a>
 
-    <form action="proses_tambah.php" method="POST">
-        <input type="text" name="kegiatan" placeholder="Masukkan tugas...">
-        <button type="submit">Tambah</button>
-    </form>
+    <div class="container">
 
-    <hr>
+        <div class="header">
+            <img src="foto1.jpg" class="foto">
+            <h2>Michael Angelo</h2>
+            <p>NIM : 245314003</p>
+        </div>
 
-    <?php
-    $data = mysqli_query($conn, "SELECT * FROM todos WHERE user_id='$user_id'");
+        <div class="todo-box">
 
-    while ($row = mysqli_fetch_assoc($data)) {
-        ?>
-        <p>
-            <?= $d['kegiatan']; ?>
+            <h2>TO DO LIST</h2>
 
-            <a href="selesai.php?id=<?= $d['id']; ?>">Selesai</a>
-            <a href="hapus.php?id=<?= $d['id']; ?>">Hapus</a>
-        </p>
-    <?php } ?>
+            <form action="tambah.php" method="POST">
+
+                <input type="text" name="kegiatan" placeholder="Masukkan kegiatan..." required>
+
+                <button type="submit">Tambah</button>
+
+            </form>
+
+            <br>
+
+            <?php
+            $query = mysqli_query(
+                $conn,
+                "SELECT * FROM todo ORDER BY id DESC"
+            );
+
+            while ($data = mysqli_fetch_assoc($query)) {
+                ?>
+
+                <div class="todo-item">
+
+                    <?php
+                    if ($data['status'] == "selesai") {
+                        echo "<s>" . $data['kegiatan'] . "</s>";
+                    } else {
+                        echo $data['kegiatan'];
+                    }
+                    ?>
+
+                    <div class="aksi">
+
+                        <a href="selesai.php?id=<?= $data['id'] ?>">
+                            Selesai
+                        </a>
+
+                        <a href="hapus.php?id=<?= $data['id'] ?>" class="hapus">
+                            Hapus
+                        </a>
+
+                    </div>
+
+                </div>
+
+            <?php } ?>
+
+            <a href="logout.php" class="logout">
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
 </body>
 
 </html>
